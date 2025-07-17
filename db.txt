@@ -1,0 +1,87 @@
+-- Tạo cơ sở dữ liệu
+CREATE DATABASE UniversityLibrary;
+USE UniversityLibrary;
+
+-- Bảng lưu thông tin sách
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(255) NOT NULL,
+    Author VARCHAR(255),
+    Genre VARCHAR(100),
+    PublicationYear INT,
+    Category VARCHAR(100),
+    TotalCopies INT NOT NULL
+);
+
+-- Bảng lưu thông tin người đọc (sinh viên, giảng viên, nhân viên)
+CREATE TABLE Readers (
+    ReaderID INT PRIMARY KEY AUTO_INCREMENT,
+    FullName VARCHAR(255) NOT NULL,
+    DateOfBirth DATE,
+    UniversityID VARCHAR(50) UNIQUE NOT NULL,
+    Department VARCHAR(255),
+    ContactDetails VARCHAR(255),
+    ReaderType VARCHAR(100) NOT NULL
+);
+
+-- Bảng lưu thông tin nhân viên thư viện
+CREATE TABLE Staff (
+    StaffID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255) NOT NULL,
+    Role VARCHAR(100),
+    WorkSchedule TEXT
+);
+
+-- Bảng lưu thông tin mượn/trả sách
+CREATE TABLE BorrowingTransactions (
+    TransactionID INT PRIMARY KEY AUTO_INCREMENT,
+    BookID INT,
+    ReaderID INT,
+    StaffID INT,
+    BorrowDate DATE NOT NULL,
+    DueDate DATE NOT NULL,
+    ReturnDate DATE,
+    Status VARCHAR(100),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID),
+    FOREIGN KEY (ReaderID) REFERENCES Readers(ReaderID),
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+);
+
+-- Bảng lưu thông tin đặt chỗ sách
+CREATE TABLE Reservations (
+    ReservationID INT PRIMARY KEY AUTO_INCREMENT,
+    BookID INT,
+    ReaderID INT,
+    ReservationDate DATE NOT NULL,
+    Status ENUM('Pending', 'Completed') NOT NULL DEFAULT 'Pending',
+    FOREIGN KEY (BookID) REFERENCES Books(BookID),
+    FOREIGN KEY (ReaderID) REFERENCES Readers(ReaderID)
+);
+
+INSERT INTO Books (BookID, Title, Author, Genre, PublicationYear, Category, TotalCopies) VALUES
+(1, 'Clean Code', 'Robert C. Martin', 'Programming', 2008, 'Software Engineering', 5),
+(2, 'The Pragmatic Programmer', 'Andrew Hunt', 'Programming', 1999, 'Software Engineering', 3),
+(3, 'Introduction to Algorithms', 'Thomas H. Cormen', 'Algorithms', 2009, 'Computer Science', 4),
+(4, 'Database System Concepts', 'Abraham Silberschatz', 'Database', 2010, 'Computer Science', 2),
+(5, 'Artificial Intelligence: A Modern Approach', 'Stuart Russell', 'AI', 2020, 'AI', 3);
+INSERT INTO Readers (ReaderID, FullName, DateOfBirth, UniversityID, Department, ContactDetails, ReaderType) VALUES
+(101, 'Nguyen Van A', '2000-05-12', 'U123456', 'Computer Science', 'nguyenvana@example.com', 'Student'),
+(102, 'Tran Thi B', '1998-08-24', 'U234567', 'Software Engineering', 'tranthib@example.com', 'Faculty'),
+(103, 'Le Van C', '2001-02-15', 'U345678', 'Computer Science', 'levanc@example.com', 'Student'),
+(104, 'Pham Thi D', '1995-06-10', 'U456789', 'Data Science', 'phamthid@example.com', 'Staff'),
+(105, 'Hoang Van E', '1999-11-30', 'U567890', 'AI', 'hoangvane@example.com', 'Student');
+INSERT INTO Staff (StaffID, Name, Role, WorkSchedule) VALUES
+(201, 'Nguyen Thanh T', 'Librarian', 'Monday - Friday, 8 AM - 5 PM'),
+(202, 'Tran Van K', 'Assistant Librarian', 'Tuesday - Saturday, 9 AM - 6 PM');
+INSERT INTO BorrowingTransactions (TransactionID, BookID, ReaderID, StaffID, BorrowDate, DueDate, ReturnDate, Status) VALUES
+(301, 1, 101, 201, '2025-03-10', '2025-03-24', NULL, 'Not Returned'),
+(302, 2, 102, 202, '2025-03-05', '2025-04-04', '2025-03-28', 'Returned'),
+(303, 3, 103, 201, '2025-03-15', '2025-03-29', NULL, 'Overdue'),
+(304, 4, 104, 202, '2025-03-12', '2025-03-26', NULL, 'Not Returned'),
+(305, 5, 105, 201, '2025-03-18', '2025-04-01', NULL, 'Not Returned');
+INSERT INTO Reservations (ReservationID, BookID, ReaderID, ReservationDate, Status) VALUES
+(401, 1, 101, '2025-03-20', 'Pending'),
+(402, 2, 102, '2025-03-18', 'Completed'),
+(403, 3, 103, '2025-03-22', 'Pending'),
+(404, 4, 104, '2025-03-15', 'Completed'),
+(405, 5, 105, '2025-03-21', 'Pending');

@@ -80,8 +80,4 @@ INSERT INTO BorrowingTransactions (TransactionID, BookID, ReaderID, StaffID, Bor
 (304, 4, 104, 202, '2025-03-12', '2025-03-26', NULL, 'Not Returned'),
 (305, 5, 105, 201, '2025-03-18', '2025-04-01', NULL, 'Not Returned');
 INSERT INTO Reservations (ReservationID, BookID, ReaderID, ReservationDate, Status) VALUES
-(401, 1, 101, '2025-03-20', 'Pending'),
-(402, 2, 102, '2025-03-18', 'Completed'),
-(403, 3, 103, '2025-03-22', 'Pending'),
-(404, 4, 104, '2025-03-15', 'Completed'),
-(405, 5, 105, '2025-03-21', 'Pending');
+
